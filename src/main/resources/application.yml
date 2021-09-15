@@ -1,0 +1,41 @@
+#Application Configuration TestIngresoEvertec 
+server:
+  port: 8091
+  error:
+    include-message: always
+    include-binding-errors: always
+
+  security:
+    user:
+      name: admin
+      password: 1234
+
+  # ===============================
+  # HEROKU DB
+  # ===============================
+  datasource:
+    username: dcfpcroboavrps
+    password: b5f3dc834378e146849b94b784605b122d78710bb87a1bbb2c3b3286ddec4b01
+    url: jdbc:postgresql://ec2-34-228-100-83.compute-1.amazonaws.com:5432/dcm44r08fjudg3
+
+# BD LOCAL
+#  datasource:
+#    username: postgres
+#    password: Medellin123+-*
+#    url: jdbc:postgresql://localhost:5432/wishlistDb
+
+  # ===============================
+  # JPA / HIBERNATE
+  # ===============================
+  jpa:
+    show-sql: true
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+    level: org.springframework.web=DEBUG
+
