@@ -1,7 +1,5 @@
 package com.goldenrace.tickets.dto;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -14,19 +12,19 @@ import lombok.ToString;
 @Getter @Setter @ToString
 public class DetailDto {
 
-    private Long idDetail;
+    private Long detailId;
 
     @NotNull(message = "Description is required.")
-    private Date description;
+    private String description;
 
     @NotNull(message = "Total amount is required.")
     @Positive(message = "Total amount should be positive value. ")
-    private Double amount;
+    private Double detailAmount;
 
     public Detail getDetail() {
-        return Detail.builder().idDetail(idDetail)
+        return Detail.builder().idDetail(detailId)
                                .description(description)
-                               .amount(amount)
+                               .amount(detailAmount)
                                .build();
     }
 

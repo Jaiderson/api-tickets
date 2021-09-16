@@ -16,18 +16,23 @@ import lombok.ToString;
 @Getter @Setter @ToString
 public class TicketDto {
 
-    private Long idTicket;
+    private Long ticketId;
 
     @NotNull(message = "Total amount is required.")
     @Positive(message = "Total amount should be positive value. ")
-    private Double totalAmount;
+    private Double total;
 
-    private List<Detail> details = Lists.newArrayList();
+    private List<DetailDto> details = Lists.newArrayList();
 
     public Ticket getTicket() {
-        return Ticket.builder().idTicket(idTicket)
-                               .totalAmount(totalAmount)
-                               .details(details)
+    	List<Detail> detailList = Lists.newArrayList(); 
+    	details.stream().forEach(detail -> {
+    		detailList.add(detail.getDetail());
+    	});
+
+    	return Ticket.builder().idTicket(ticketId)
+                               .totalAmount(total)
+                               .details(detailList)
                                .build();
     }
 

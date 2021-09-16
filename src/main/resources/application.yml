@@ -5,6 +5,7 @@ server:
     include-message: always
     include-binding-errors: always
 
+spring:
   security:
     user:
       name: admin
@@ -13,16 +14,16 @@ server:
   # ===============================
   # HEROKU DB
   # ===============================
-  datasource:
-    username: dcfpcroboavrps
-    password: b5f3dc834378e146849b94b784605b122d78710bb87a1bbb2c3b3286ddec4b01
-    url: jdbc:postgresql://ec2-34-228-100-83.compute-1.amazonaws.com:5432/dcm44r08fjudg3
+#  datasource:
+#    username: dcfpcroboavrps
+#    password: b5f3dc834378e146849b94b784605b122d78710bb87a1bbb2c3b3286ddec4b01
+#    url: jdbc:postgresql://ec2-34-228-100-83.compute-1.amazonaws.com:5432/dcm44r08fjudg3
 
 # BD LOCAL
-#  datasource:
-#    username: postgres
-#    password: Medellin123+-*
-#    url: jdbc:postgresql://localhost:5432/wishlistDb
+  datasource:
+    username: postgres
+    password: Medellin123+-*
+    url: jdbc:postgresql://localhost:5432/ticketDb
 
   # ===============================
   # JPA / HIBERNATE
@@ -33,6 +34,10 @@ server:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui-api-ticket.html
 
 logging:
   pattern:

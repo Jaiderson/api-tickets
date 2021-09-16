@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
@@ -35,7 +35,7 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTicket;
 
-    @Column(name="create_at")
+    @Column(name="create_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createAt;
 
@@ -44,8 +44,7 @@ public class Ticket {
     @Positive(message = "Total amount should be positive value. ")
     private Double totalAmount;
 
-    @OneToMany
-    @JoinColumn(name = "detail_id", nullable = false)
+    @OneToMany(mappedBy="ticket", fetch = FetchType.LAZY)
     private List<Detail> details;
 
     @PrePersist
