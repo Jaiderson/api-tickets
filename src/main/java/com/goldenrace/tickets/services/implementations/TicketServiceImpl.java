@@ -23,6 +23,12 @@ public class TicketServiceImpl implements ITicketService {
 	@Autowired
 	private IDetailService detailService;
 
+	public TicketServiceImpl(ITicketRep ticketRep, IDetailService detailService) {
+	    super();
+	    this.ticketRep = ticketRep;
+	    this.detailService = detailService;
+	}
+
 	@Override
 	public Ticket findByIdTicket(Long idTicket) {
 		if(null == idTicket) {
@@ -40,10 +46,10 @@ public class TicketServiceImpl implements ITicketService {
 	@Transactional(readOnly = false)
 	public MessageResponse createTicket(Ticket newTicket) {
 		MessageResponse msnResponse = new MessageResponse();
-		Ticket libroBd = findByIdTicket(newTicket.getIdTicket());
+		Ticket ticketBd = findByIdTicket(newTicket.getIdTicket());
 
-		if(null == libroBd && this.saveTicket(msnResponse, newTicket)) {
-	        msnResponse.setStatus(MessageResponse.CREATED_OK);
+		if(null == ticketBd && this.saveTicket(msnResponse, newTicket)) {
+		    msnResponse.setStatus(MessageResponse.CREATED_OK);
 		}
 		else {
 			msnResponse.getInconsistencies().add(MessageResponse.ALREADY_EXIST);
@@ -81,6 +87,7 @@ public class TicketServiceImpl implements ITicketService {
 				this.detailService.deleteDetail(idDetail);
 				ticketDb.setTotalAmount(ticketDb.getTotalAmount() - detail.getAmount());
 				this.saveTicket(msnResponse, ticketDb);
+				msnResponse.setStatus(MessageResponse.PROCESS_OK);
 			}
 			else {
 				msnResponse.getInconsistencies().add(MessageResponse.NO_EXIST + " idDetail: " + idDetail);
@@ -95,17 +102,19 @@ public class TicketServiceImpl implements ITicketService {
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public MessageResponse deleteTicket(Long idTicket) {
 		MessageResponse msnResponse = new MessageResponse();
 		Ticket ticketDb = findByIdTicket(idTicket);
 		if(null != ticketDb) {
 		    try {
-		    	ticketRep.delete(ticketDb);
-		    	msnResponse.setStatus(MessageResponse.PROCESS_OK);
+		        detailService.deleteDetailsByIdTicket(ticketDb);
+		        ticketRep.delete(ticketDb);
+		        msnResponse.setStatus(MessageResponse.PROCESS_OK);
 		    }
 		    catch (Exception e) {
-		    	msnResponse.getInconsistencies().add(MessageResponse.SQL_ERROR + " "+ e.getMessage());
-		    	msnResponse.setStatus(MessageResponse.SQL_ERROR);
+		        msnResponse.getInconsistencies().add(MessageResponse.SQL_ERROR + " "+ e.getMessage());
+		        msnResponse.setStatus(MessageResponse.SQL_ERROR);
 			}
 		}
 		else {
@@ -162,6 +171,7 @@ public class TicketServiceImpl implements ITicketService {
 			Ticket ticket = detail.getTicket();
 			ticket.setTotalAmount(ticket.getTotalAmount() + detail.getAmount());
 			this.saveTicket(msnResponse, ticket);
+			msnResponse.setStatus(MessageResponse.CREATED_OK);
 		}
 		catch (Exception e) {
 			msnResponse.getInconsistencies().add(MessageResponse.SQL_ERROR + " "+ e.getMessage());

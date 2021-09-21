@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.goldenrace.tickets.entities.Detail;
+import com.goldenrace.tickets.entities.Ticket;
 import com.goldenrace.tickets.utils.MessageResponse;
 
 @Service
@@ -49,5 +50,13 @@ public interface IDetailService {
 	 * @return Message response whit OK or bat status.
 	 */
 	public MessageResponse deleteDetail(Long idDetail);
+
+   /**
+     * Delete all details of a existing ticket.
+     * 
+     * @param ticket Ticket to delete ours details.
+     * @return Message response whit OK or bat status.
+     */
+    public MessageResponse deleteDetailsByIdTicket(Ticket ticket);
 
 }
