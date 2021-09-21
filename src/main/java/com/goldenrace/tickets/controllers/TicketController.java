@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.goldenrace.tickets.dto.DetailDto;
 import com.goldenrace.tickets.dto.TicketDto;
 import com.goldenrace.tickets.entities.Ticket;
 import com.goldenrace.tickets.services.ITicketService;
@@ -34,7 +35,16 @@ public class TicketController {
 	@Autowired
 	private ITicketService ticketService;
 
-	@GetMapping(value = "/idTicket")
+	@GetMapping
+    public ResponseEntity<List<Ticket>> findAllTickets(){
+		List<Ticket> ticket = ticketService.findAllTickets();
+         if(ticket.isEmpty()) {
+         	throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tickets not found.");
+         }
+         return ResponseEntity.ok(ticket); 
+     }
+
+	@GetMapping(value = "/{idTicket}")
     public ResponseEntity<Ticket> findTicketById(@PathVariable(name="idTicket", required = true) Long idTicket){
 		Ticket ticket = ticketService.findByIdTicket(idTicket);
          if(null == ticket) {
@@ -57,22 +67,40 @@ public class TicketController {
      }
 
 	@PostMapping
-    public ResponseEntity<MessageResponse> createTicket(@Valid @RequestBody TicketDto ticket1, BindingResult result){
+    public ResponseEntity<MessageResponse> createTicket(@Valid @RequestBody TicketDto ticketDto, BindingResult result){
         if(result.hasErrors()) {
         	ErrorMessage msnError = new ErrorMessage(ErrorMessage.NEW);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msnError.getMensaje(result));
         }
-        MessageResponse msnResponse = ticketService.createTicket(ticket1.getTicket());
+        
+        Ticket ticket = ticketDto.getTicket();
+        if(!ticket.isOkTotalAmount()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Total amount different to details amount sum.");
+        }
+
+        MessageResponse msnResponse = ticketService.createTicket(ticket);
         return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
     }
 
-	@PutMapping
-    public ResponseEntity<MessageResponse> updateTicket(@Valid @RequestBody TicketDto ticket, BindingResult result){
-        if(result.hasErrors()) {
+	@PutMapping("/{idTicket}")
+    public ResponseEntity<MessageResponse> addDetailTicket(
+    		@PathVariable(name="idTicket", required = true) Long idTicket,
+    		@Valid @RequestBody DetailDto detail, BindingResult result){
+
+		if(result.hasErrors()) {
         	ErrorMessage msnError = new ErrorMessage(ErrorMessage.NEW);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msnError.getMensaje(result));
         }
-        MessageResponse msnResponse = ticketService.updateTicket(ticket.getTicket());
+        MessageResponse msnResponse = ticketService.addDetailTicket(idTicket, detail.getDetail());
+        return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
+    }
+
+	@DeleteMapping("/it/{idTicket}/id/{idDetail}")
+    public ResponseEntity<MessageResponse> deleteDetailTicket(
+    		@PathVariable(name="idTicket", required = true) Long idTicket,
+    		@PathVariable(name="idDetail", required = true) Long idDetail){
+
+		MessageResponse msnResponse = ticketService.deleteDetailTicket(idTicket, idDetail);
         return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
     }
 

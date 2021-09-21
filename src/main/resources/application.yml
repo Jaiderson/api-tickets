@@ -4,6 +4,8 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+  servlet:
+    context-path: /tickets-api/v1
 
 spring:
   security:

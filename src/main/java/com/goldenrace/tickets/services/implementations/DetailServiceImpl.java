@@ -27,9 +27,9 @@ public class DetailServiceImpl implements IDetailService {
 	}
 
 	@Override
-	public MessageResponse createDetail(Detail newTicket) {
+	public MessageResponse createDetail(Detail newDetail) {
 		MessageResponse msnResponse = new MessageResponse();
-	    if(this.saveDetail(msnResponse, newTicket) ) {
+	    if(this.saveDetail(msnResponse, newDetail) ) {
 		        msnResponse.setStatus(MessageResponse.CREATED_OK);
 	    }
 		return msnResponse;

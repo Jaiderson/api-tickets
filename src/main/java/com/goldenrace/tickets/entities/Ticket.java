@@ -52,4 +52,13 @@ public class Ticket {
         this.createAt = new Date();
     }
 
+    public boolean isOkTotalAmount() {
+    	double total = 0; 
+    	if(null != details && !details.isEmpty()) {
+    		for(Detail detail : details) {
+    			total += detail.getAmount();
+    		}
+    	}
+    	return totalAmount == total;
+    }
 }

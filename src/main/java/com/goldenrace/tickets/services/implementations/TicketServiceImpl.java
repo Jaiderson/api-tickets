@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.goldenrace.tickets.entities.Detail;
 import com.goldenrace.tickets.entities.Ticket;
 import com.goldenrace.tickets.repositories.ITicketRep;
+import com.goldenrace.tickets.services.IDetailService;
 import com.goldenrace.tickets.services.ITicketService;
 import com.goldenrace.tickets.utils.MessageResponse;
 
@@ -17,8 +20,14 @@ public class TicketServiceImpl implements ITicketService {
 	@Autowired
 	private ITicketRep ticketRep;
 
+	@Autowired
+	private IDetailService detailService;
+
 	@Override
 	public Ticket findByIdTicket(Long idTicket) {
+		if(null == idTicket) {
+			return null;
+		}
 		return ticketRep.findByIdTicket(idTicket);
 	}
 
@@ -28,6 +37,7 @@ public class TicketServiceImpl implements ITicketService {
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public MessageResponse createTicket(Ticket newTicket) {
 		MessageResponse msnResponse = new MessageResponse();
 		Ticket libroBd = findByIdTicket(newTicket.getIdTicket());
@@ -43,15 +53,42 @@ public class TicketServiceImpl implements ITicketService {
 	}
 
 	@Override
-	public MessageResponse updateTicket(Ticket ticket) {
+	@Transactional(readOnly = false)
+	public MessageResponse addDetailTicket(Long idTicket, Detail detail) {
 		MessageResponse msnResponse = new MessageResponse();
-		Ticket ticketDb = findByIdTicket(ticket.getIdTicket());
+		Ticket ticketDb = findByIdTicket(idTicket);
 
-		if(null != ticketDb && this.saveTicket(msnResponse, ticket)) {
-	        msnResponse.setStatus(MessageResponse.PROCESS_OK);
+		if(null != ticketDb) {
+			detail.setTicket(ticketDb);
+			msnResponse = this.addDetail(detail);
 		}
 		else {
 			msnResponse.getInconsistencies().add(MessageResponse.NO_EXIST);
+			msnResponse.setStatus(MessageResponse.NO_EXIST);
+		}
+		return msnResponse;
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public MessageResponse deleteDetailTicket(Long idTicket, Long idDetail) {
+		MessageResponse msnResponse = new MessageResponse();
+		Ticket ticketDb = findByIdTicket(idTicket);
+
+		if(null != ticketDb) {
+			Detail detail = this.detailService.findByIdDetail(idDetail);
+			if(null != detail && idTicket.equals(detail.getTicket().getIdTicket())) {
+				this.detailService.deleteDetail(idDetail);
+				ticketDb.setTotalAmount(ticketDb.getTotalAmount() - detail.getAmount());
+				this.saveTicket(msnResponse, ticketDb);
+			}
+			else {
+				msnResponse.getInconsistencies().add(MessageResponse.NO_EXIST + " idDetail: " + idDetail);
+				msnResponse.setStatus(MessageResponse.NO_EXIST);
+			}
+		}
+		else {
+			msnResponse.getInconsistencies().add(MessageResponse.NO_EXIST + " idTicket: " + idTicket);
 			msnResponse.setStatus(MessageResponse.NO_EXIST);
 		}
 		return msnResponse;
@@ -78,6 +115,11 @@ public class TicketServiceImpl implements ITicketService {
 		return msnResponse;
 	}
 
+	@Override
+	public List<Ticket> findAllTickets() {
+		return ticketRep.findAll();
+	}
+
 	/**
 	 * Method saved a ticket and catch the inconsistencies if existing.
 	 * 
@@ -88,6 +130,15 @@ public class TicketServiceImpl implements ITicketService {
 	    boolean isOk = false;
 		try {
 			ticketRep.save(ticket);
+
+			ticket.getDetails().forEach(detail -> {
+				detail.setTicket(ticket);
+				MessageResponse msnDetailsResponse = detailService.createDetail(detail);
+				if(!msnDetailsResponse.getStatus().equals(MessageResponse.CREATED_OK)) {
+					msnResponse.getInconsistencies().addAll(msnDetailsResponse.getInconsistencies());
+					msnResponse.setStatus(msnDetailsResponse.getStatus());
+				}
+			});
 			isOk = true;
 		}
 		catch (Exception e) {
@@ -96,6 +147,33 @@ public class TicketServiceImpl implements ITicketService {
 			msnResponse.setStatus(MessageResponse.SQL_ERROR);
 		}
 		return isOk;
+	}
+
+	/**
+	 * Method adding a new detail to existing ticket and catch the inconsistencies if existing.
+	 * 
+	 * @param detail Ticket to save.
+	 * @return Message response whit OK or bat status. 
+	 */
+	private MessageResponse addDetail(Detail detail) {
+		MessageResponse msnResponse = new MessageResponse();
+		try {
+			this.detailService.createDetail(detail);
+			Ticket ticket = detail.getTicket();
+			ticket.setTotalAmount(ticket.getTotalAmount() + detail.getAmount());
+			this.saveTicket(msnResponse, ticket);
+		}
+		catch (Exception e) {
+			msnResponse.getInconsistencies().add(MessageResponse.SQL_ERROR + " "+ e.getMessage());
+			msnResponse.setStatus(MessageResponse.SQL_ERROR);
+		}
+		return msnResponse;
+	}
+
+	@Override
+	public MessageResponse updateTotalAmountTicket(Long idTicket, double value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

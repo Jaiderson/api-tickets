@@ -26,9 +26,7 @@ public class TicketDto {
 
     public Ticket getTicket() {
     	List<Detail> detailList = Lists.newArrayList(); 
-    	details.stream().forEach(detail -> {
-    		detailList.add(detail.getDetail());
-    	});
+    	details.stream().forEach(detail -> detailList.add(detail.getDetail()));
 
     	return Ticket.builder().idTicket(ticketId)
                                .totalAmount(total)
