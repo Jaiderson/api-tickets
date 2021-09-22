@@ -39,15 +39,6 @@ public interface ITicketService {
 	public MessageResponse createTicket(Ticket ticket);
 
 	/**
-	 * Update total amount of a ticket.
-	 * 
-	 * @param idTicket Ticket id.
-	 * @param value Value to sum.
-	 * @return Message response whit OK or bat status.
-	 */
-	public MessageResponse updateTotalAmountTicket(Long idTicket, double value);
-
-	/**
 	 * Add a new detail to existing ticket and update total amount.
 	 * 
 	 * @param idTicket Ticket id to add new detail.

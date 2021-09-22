@@ -40,7 +40,7 @@ public class DetailServiceTest {
         detailService = new DetailServiceImpl(detailRep);
         ticketService = new TicketServiceImpl(ticketRep, detailService);
 
-        this.ticket = TestProvider.getTicktet();
+        this.ticket = TestProvider.getTicktetOne();
         this.ticketService.createTicket(ticket);
     }
 

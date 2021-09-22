@@ -180,10 +180,4 @@ public class TicketServiceImpl implements ITicketService {
 		return msnResponse;
 	}
 
-	@Override
-	public MessageResponse updateTotalAmountTicket(Long idTicket, double value) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

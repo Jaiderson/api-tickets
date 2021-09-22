@@ -24,7 +24,7 @@ public class MessageResponse {
 
 	private String status;
 
-	public HttpStatus generarEstadoHttp() {
+	public HttpStatus generateHttpStatus() {
 		HttpStatus result = null; 
 		
 		if(this.status.equals(ALREADY_EXIST)) {

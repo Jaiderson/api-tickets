@@ -45,7 +45,7 @@ public class DetailController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msnError.getMensaje(result));
         }
         MessageResponse msnResponse = detailService.createDetail(detail.getDetail());
-        return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
+        return ResponseEntity.status(msnResponse.generateHttpStatus()).body(msnResponse);
     }
 
 	@PutMapping
@@ -55,13 +55,13 @@ public class DetailController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msnError.getMensaje(result));
         }
         MessageResponse msnResponse = detailService.updateDetail(detail.getDetail());
-        return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
+        return ResponseEntity.status(msnResponse.generateHttpStatus()).body(msnResponse);
     }
 
 	@DeleteMapping("/{idDetail}")
     public ResponseEntity<MessageResponse> deleteDetail(@PathVariable("idDetail") Long idDetail, BindingResult result){
         MessageResponse msnResponse = detailService.deleteDetail(idDetail);
-        return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
+        return ResponseEntity.status(msnResponse.generateHttpStatus()).body(msnResponse);
     }
 
 }

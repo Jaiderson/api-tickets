@@ -39,7 +39,7 @@ public class TicketServiceTest {
 
     @Test
     void createTicketTest() {
-        this.ticket = TestProvider.getTicktet();
+        this.ticket = TestProvider.getTicktetOne();
         MessageResponse msnResponse = this.ticketService.createTicket(ticket);
         assertThat(this.ticket.getIdTicket()).isPositive();
         assertThat(msnResponse.getStatus()).isEqualTo(MessageResponse.CREATED_OK);
@@ -47,7 +47,7 @@ public class TicketServiceTest {
 
     @Test
     void addDetailTicketTest() {
-        this.ticket = TestProvider.getTicktet();
+        this.ticket = TestProvider.getTicktetOne();
         MessageResponse msnResponse = this.ticketService.createTicket(ticket);
         assertThat(this.ticket.getIdTicket()).isPositive();
         assertThat(msnResponse.getStatus()).isEqualTo(MessageResponse.CREATED_OK);
@@ -63,7 +63,7 @@ public class TicketServiceTest {
 
     @Test
     void deleteDetailTicketTest() {
-        this.ticket = TestProvider.getTicktet();
+        this.ticket = TestProvider.getTicktetOne();
         MessageResponse msnResponse = this.ticketService.createTicket(ticket);
         assertThat(this.ticket.getIdTicket()).isPositive();
         assertThat(this.ticket.getDetails().size()).isGreaterThan(0);
@@ -80,7 +80,7 @@ public class TicketServiceTest {
 
     @Test
     void deleteTicketTest() {
-        this.ticket = TestProvider.getTicktet();
+        this.ticket = TestProvider.getTicktetOne();
         MessageResponse msnResponse = this.ticketService.createTicket(ticket);
         assertThat(this.ticket.getIdTicket()).isPositive();
         assertThat(msnResponse.getStatus()).isEqualTo(MessageResponse.CREATED_OK);

@@ -63,7 +63,11 @@ public class TicketController {
 		if(!wraperIni.isOk() || !wraperEnd.isOk()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format, please use yyyy-MM-dd");
 		}
-         return ResponseEntity.ok(ticketService.findByIdTicket((Date) wraperIni.getValue(), (Date) wraperEnd.getValue())); 
+		List<Ticket> tickets = ticketService.findByIdTicket((Date) wraperIni.getValue(), (Date) wraperEnd.getValue());
+		if(tickets.isEmpty()) {
+		    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tickets not found.");
+		}
+         return ResponseEntity.ok(tickets);
      }
 
 	@PostMapping
@@ -79,7 +83,7 @@ public class TicketController {
         }
 
         MessageResponse msnResponse = ticketService.createTicket(ticket);
-        return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
+        return ResponseEntity.status(msnResponse.generateHttpStatus()).body(msnResponse);
     }
 
 	@PutMapping("/{idTicket}")
@@ -92,7 +96,7 @@ public class TicketController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msnError.getMensaje(result));
         }
         MessageResponse msnResponse = ticketService.addDetailTicket(idTicket, detail.getDetail());
-        return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
+        return ResponseEntity.status(msnResponse.generateHttpStatus()).body(msnResponse);
     }
 
 	@DeleteMapping("/it/{idTicket}/id/{idDetail}")
@@ -100,14 +104,14 @@ public class TicketController {
     		@PathVariable(name="idTicket", required = true) Long idTicket,
     		@PathVariable(name="idDetail", required = true) Long idDetail){
 
-		MessageResponse msnResponse = ticketService.deleteDetailTicket(idTicket, idDetail);
-        return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
+        MessageResponse msnResponse = ticketService.deleteDetailTicket(idTicket, idDetail);
+        return ResponseEntity.status(msnResponse.generateHttpStatus()).body(msnResponse);
     }
 
 	@DeleteMapping("/{idTicket}")
-    public ResponseEntity<MessageResponse> deleteTicket(@PathVariable("idTicket") Long idTicket, BindingResult result){
+    public ResponseEntity<MessageResponse> deleteTicket(@PathVariable("idTicket") Long idTicket){
         MessageResponse msnResponse = ticketService.deleteTicket(idTicket);
-        return ResponseEntity.status(msnResponse.generarEstadoHttp()).body(msnResponse);
+        return ResponseEntity.status(msnResponse.generateHttpStatus()).body(msnResponse);
     }
 
 }
