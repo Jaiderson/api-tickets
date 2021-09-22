@@ -184,7 +184,7 @@ public class TicketControllerTest {
 
     @Test
     void deleteTicketTest() throws Exception {
-        long idTicket = 105;
+        long idTicket = 115;
         MessageResponse msnResponse = new MessageResponse();
         msnResponse.setStatus(MessageResponse.PROCESS_OK);
         Mockito.when(ticketService.deleteTicket(idTicket)).thenReturn(msnResponse);

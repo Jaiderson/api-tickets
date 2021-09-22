@@ -1,12 +1,13 @@
 # api-tickets
-Desafío de la codificación Golden-Race que consiste en la implementación de una aplicación web que expone una API REST- full para crear para la cual permite registrar tickets de apuestas con sus respectivos detalles.
+Desafío de la codificación Golden-Race que consiste en la implementación de una aplicación web que expone una API REST- full la cual permite registrar tickets de apuestas con sus respectivos detalles.
 
-En esta API los usuarios podrán registrar sus tickets de apuestas la cual tendrá su monto total y fecha de creación del ticket, además contendrá cada uno de los detalles de la apuesta, cada detalle contiene la descripción de la apuesta y el monto apostado a dicho ítem, la sumatoria de los ítems corresponderá al total del ticket.
+En esta API los usuarios podrán registrar sus tickets de apuestas la cual tendrá su monto total y fecha de creación del ticket, además contendrá cada uno de los detalles de la apuesta, cada detalle contiene la descripción de la apuesta y el monto apostado a dicho ítem, la sumatoria de los ítems corresponderá al valor total del ticket.
 
-- Crear ticket permitirá al usuario crear un ticket con sus respectivos detalles ó si lo desea sin detalles los cuales podrá adicionar posteriormente.
+#FUNCIONALIDADES
+- Crear ticket le permitirá al usuario crear un ticket con sus respectivos detalles ó si lo desea sin detalles los cuales podrá adicionar posteriormente.
 - Agregar un ítem de apuesta (detalle) a un ticket existente.
 - Eliminar un ítem de apuesta (detalle) a un ticket existente.
-- Eliminar un ticket el cual eliminará sus ítems (detalles) asociados.
+- Eliminar un ticket el cual no solo eliminará el ticket si no también sus ítems (detalles) asociados.
 - Buscar un ticket y sus detalles de apuesta dado su Id.
 - Buscar tickets y sus detalles entre un rango de fechas.
 
@@ -51,8 +52,8 @@ tickets-api-spring-boot/
  │       └── TicketsApplication.java
  │
  ├── src/main/resources/
- │   ├── sql
- │   │    └── DB.sql
+ │   └── sql
+ │        └── DB.sql
  │
  ├── src/test/java/
  │   └── tickets
@@ -61,6 +62,9 @@ tickets-api-spring-boot/
  │       │   └── DetailServiceTest.java
  │       │   └── TicketServiceTest.java
  │       │   
+ │       ├── controllers
+ │       │   └── TicketControllerTest.java
+ │       │
  │       TicketsApplicationTests
  │
  ├───────
