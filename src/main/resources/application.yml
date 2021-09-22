@@ -22,29 +22,24 @@ spring:
 #    url: jdbc:postgresql://ec2-34-228-100-83.compute-1.amazonaws.com:5432/dcm44r08fjudg3
 
   # ===============================
-  # BD LOCAL
+  # LOCAL DB
   # ===============================
   datasource:
-    username: postgres
+    username: root
     password: Medellin123+-*
-    url: jdbc:postgresql://localhost:5432/ticketDb
+    url: jdbc:mysql://localhost:3306/ticketDb?useUnicode=true&serverTimezone=UTC
 
   # ===============================
   # JPA / HIBERNATE
   # ===============================
   jpa:
     show-sql: true
-    database: postgresql
+    database: mysql
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-springdoc:
-  swagger-ui:
-    path: /swagger-ui-api-ticket.html
+    database-platform: org.hibernate.dialect.MySQL5Dialect
 
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
     level: org.springframework.web=DEBUG
-

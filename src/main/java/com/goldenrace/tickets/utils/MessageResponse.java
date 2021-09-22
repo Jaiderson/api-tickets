@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,10 +22,16 @@ public class MessageResponse {
 	public static final String PROCESS_OK = "Processed correctly. ";
 	public static final String NOT_AUTHORIZED = "Application rejected, no access to the resource. ";
 
-	private List<String> inconsistencies = Lists.newArrayList();
-
+	@ApiModelProperty(position=1, dataType="String", value="Status of a request. <br>", 
+	                  example="Record created.", required=false)
 	private String status;
 
+	@ApiModelProperty(position=2, dataType="String", value="Inconsistencies list of a request.", 
+			example="['SQL Exception Record already exist','Application rejected, no access to the resource']",
+			required=false)
+	private List<String> inconsistencies = Lists.newArrayList();
+
+	@JsonIgnore
 	public HttpStatus generateHttpStatus() {
 		HttpStatus result = null; 
 		
