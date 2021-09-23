@@ -76,14 +76,13 @@ public class TicketServiceImpl implements ITicketService {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
 	public MessageResponse deleteDetailTicket(Long idTicket, Long idDetail) {
 		MessageResponse msnResponse = new MessageResponse();
 		Ticket ticketDb = findByIdTicket(idTicket);
 
 		if(null != ticketDb) {
-			Detail detail = this.detailService.findByIdDetail(idDetail);
-			if(null != detail && idTicket.equals(detail.getTicket().getIdTicket())) {
+			Detail detail = this.detailService.findByIdTicketAndIdDetail(idTicket, idDetail);
+			if(null != detail) {
 				this.detailService.deleteDetail(idDetail);
 				ticketDb.setTotalAmount(ticketDb.getTotalAmount() - detail.getAmount());
 				this.saveTicket(msnResponse, ticketDb);
@@ -105,11 +104,11 @@ public class TicketServiceImpl implements ITicketService {
 	@Transactional(readOnly = false)
 	public MessageResponse deleteTicket(Long idTicket) {
 		MessageResponse msnResponse = new MessageResponse();
-		Ticket ticketDb = findByIdTicket(idTicket);
-		if(null != ticketDb) {
+
+		if(ticketRep.existsByIdTicket(idTicket)) {
 		    try {
-		        detailService.deleteDetailsByIdTicket(ticketDb);
-		        ticketRep.delete(ticketDb);
+		        detailService.deleteDetailsByIdTicket(idTicket);
+		        ticketRep.deleteById(idTicket);
 		        msnResponse.setStatus(MessageResponse.PROCESS_OK);
 		    }
 		    catch (Exception e) {

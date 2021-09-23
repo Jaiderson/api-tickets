@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.goldenrace.tickets.entities.Detail;
-import com.goldenrace.tickets.entities.Ticket;
 import com.goldenrace.tickets.repositories.IDetailRep;
 import com.goldenrace.tickets.services.IDetailService;
 import com.goldenrace.tickets.utils.MessageResponse;
@@ -28,6 +27,11 @@ public class DetailServiceImpl implements IDetailService {
 	}
 
 	@Override
+	public Detail findByIdTicketAndIdDetail(Long idTicket, Long idDetail) {
+		return detailRep.findByIdDetailAndIdTicket(idTicket, idDetail);
+	}
+
+	@Override
 	public List<Detail> findByIdTicket(Long idTicket) {
 		return detailRep.findByIdTicket(idTicket);
 	}
@@ -44,7 +48,7 @@ public class DetailServiceImpl implements IDetailService {
 	@Override
 	public MessageResponse updateDetail(Detail detail) {
 		MessageResponse msnResponse = new MessageResponse();
-		Detail detailDb = findByIdDetail(detail.getIdDetail());
+		Detail detailDb = detailRep.findByIdDetail(detail.getIdDetail());
 
 		if(null != detailDb && this.saveDetail(msnResponse, detail)) {
 	        msnResponse.setStatus(MessageResponse.PROCESS_OK);
@@ -59,7 +63,7 @@ public class DetailServiceImpl implements IDetailService {
 	@Override
 	public MessageResponse deleteDetail(Long idDetail) {
 		MessageResponse msnResponse = new MessageResponse();
-		Detail detailDb = findByIdDetail(idDetail);
+		Detail detailDb = detailRep.findByIdDetail(idDetail);
 
 		if(null != detailDb) {
 			try {
@@ -98,12 +102,12 @@ public class DetailServiceImpl implements IDetailService {
 	}
 
     @Override
-    public MessageResponse deleteDetailsByIdTicket(Ticket ticket) {
+    public MessageResponse deleteDetailsByIdTicket(Long idTicket) {
         MessageResponse msnResponse = new MessageResponse();
 
-        if(null != ticket) {
+        if(null != idTicket) {
             try {
-                detailRep.deleteByIdTicket(ticket.getIdTicket());
+                detailRep.deleteByIdTicket(idTicket);
                 msnResponse.setStatus(MessageResponse.PROCESS_OK);
             }
             catch (Exception e) {

@@ -19,7 +19,7 @@ import com.goldenrace.tickets.utils.MessageResponse;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class TicketServiceTest {
+class TicketServiceTest {
 
     @Autowired
     private IDetailRep detailRep;
@@ -66,7 +66,7 @@ public class TicketServiceTest {
         this.ticket = TestProvider.getTicktetOne();
         MessageResponse msnResponse = this.ticketService.createTicket(ticket);
         assertThat(this.ticket.getIdTicket()).isPositive();
-        assertThat(this.ticket.getDetails().size()).isGreaterThan(0);
+        assertThat(this.ticket.getDetails().size()).isPositive();
         assertThat(msnResponse.getStatus()).isEqualTo(MessageResponse.CREATED_OK);
 
         Detail detail = this.ticket.getDetails().get(0);

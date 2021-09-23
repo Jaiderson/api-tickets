@@ -5,19 +5,27 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.goldenrace.tickets.entities.Detail;
-import com.goldenrace.tickets.entities.Ticket;
 import com.goldenrace.tickets.utils.MessageResponse;
 
 @Service
 public interface IDetailService {
 
 	/**
-	 * Find a details of a ticket by detail Id.
+	 * Find a details of a ticket by ticket id and detail Id.
 	 * 
-	 * @param idDetail Ticket id.
+	 * @param idDetail Detail id.
 	 * @return Detail of a ticktet or <b>null</b> if not found anything.
 	 */
 	public Detail findByIdDetail(Long idDetail); 
+
+	/**
+	 * Find a details of a ticket by ticket id and detail Id.
+	 * 
+	 * @param idTicket Ticket
+	 * @param idDetail Detail id.
+	 * @return Detail of a ticktet or <b>null</b> if not found anything.
+	 */
+	public Detail findByIdTicketAndIdDetail(Long idTicket, Long idDetail); 
 
 	/**
 	 * Find all details of a ticket by ticket Id.
@@ -54,9 +62,9 @@ public interface IDetailService {
    /**
      * Delete all details of a existing ticket.
      * 
-     * @param ticket Ticket to delete ours details.
+     * @param idTicket Ticket id to delete ours details.
      * @return Message response whit OK or bat status.
      */
-    public MessageResponse deleteDetailsByIdTicket(Ticket ticket);
+    public MessageResponse deleteDetailsByIdTicket(Long idTicket);
 
 }

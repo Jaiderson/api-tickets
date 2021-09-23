@@ -23,7 +23,7 @@ import com.goldenrace.tickets.utils.MessageResponse;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestMethodOrder(OrderAnnotation.class)
-public class DetailServiceTest {
+class DetailServiceTest {
 
     @Autowired
     private IDetailRep detailRep;

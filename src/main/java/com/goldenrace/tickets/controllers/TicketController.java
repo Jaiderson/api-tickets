@@ -28,6 +28,10 @@ import com.goldenrace.tickets.utils.MessageResponse;
 import com.goldenrace.tickets.utils.Util;
 import com.goldenrace.tickets.utils.Wraper;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @Controller
 @RequestMapping(value = "/tickets")
 public class TicketController {
@@ -35,6 +39,7 @@ public class TicketController {
 	@Autowired
 	private ITicketService ticketService;
 
+	//TODO Delete this method
 	@GetMapping
     public ResponseEntity<List<Ticket>> findAllTickets(){
 		List<Ticket> ticket = ticketService.findAllTickets();
@@ -45,6 +50,13 @@ public class TicketController {
      }
 
 	@GetMapping(value = "/{idTicket}")
+    @ApiOperation(value = "Allows you to search for a betting ticket given its id.")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Search ends successfully."),
+        @ApiResponse(code = 204, message = "No content."),
+        @ApiResponse(code = 401, message = "Access to the unauthorized resource."),
+        @ApiResponse(code = 404, message = "No records were found.")
+    })
     public ResponseEntity<Ticket> findTicketById(@PathVariable(name="idTicket", required = true) Long idTicket){
 		Ticket ticket = ticketService.findByIdTicket(idTicket);
          if(null == ticket) {
@@ -54,6 +66,14 @@ public class TicketController {
      }
 
 	@GetMapping(value = "/id/{iniDate}/ed/{endDate}")
+	@ApiOperation(value = "Allows you to search for a betting ticket in a range of dates.")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Search ends successfully."),
+        @ApiResponse(code = 204, message = "No content."),
+        @ApiResponse(code = 401, message = "Access to the unauthorized resource."),
+        @ApiResponse(code = 400, message = "Bad request."),
+        @ApiResponse(code = 404, message = "No records were found.")
+    })
     public ResponseEntity<List<Ticket>> findTicketsBetweenDates(
     		@PathVariable(name="iniDate", required = true) String iniDate,
     		@PathVariable(name="endDate", required = true) String endDate){
@@ -71,6 +91,14 @@ public class TicketController {
      }
 
 	@PostMapping
+	@ApiOperation(value = "Allows you to create a ticket to the user with their respective details "+
+	                      "or if you wish without details which can be added later.")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Record successfully created."),
+        @ApiResponse(code = 204, message = "No content."),
+        @ApiResponse(code = 401, message = "Access to the unauthorized resource."),
+        @ApiResponse(code = 400, message = "Bad request.")
+    })
     public ResponseEntity<MessageResponse> createTicket(@Valid @RequestBody TicketDto ticketDto, BindingResult result){
         if(result.hasErrors()) {
         	ErrorMessage msnError = new ErrorMessage(ErrorMessage.NEW);
@@ -87,6 +115,14 @@ public class TicketController {
     }
 
 	@PutMapping("/{idTicket}")
+	@ApiOperation(value = "Allows you to add a wager item (detail) to an existing ticket.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Search ends successfully."),
+	    @ApiResponse(code = 204, message = "No content."),
+	    @ApiResponse(code = 401, message = "Access to the unauthorized resource."),
+	    @ApiResponse(code = 400, message = "Bad request."),
+		@ApiResponse(code = 404, message = "Tticket does not exist.")
+	})
     public ResponseEntity<MessageResponse> addDetailTicket(
     		@PathVariable(name="idTicket", required = true) Long idTicket,
     		@Valid @RequestBody DetailDto detail, BindingResult result){
@@ -100,6 +136,14 @@ public class TicketController {
     }
 
 	@DeleteMapping("/it/{idTicket}/id/{idDetail}")
+	@ApiOperation(value = "Allows you to remove a bet item (detail) from an existing ticket.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Search ends successfully."),
+	    @ApiResponse(code = 204, message = "No content."),
+	    @ApiResponse(code = 401, message = "Access to the unauthorized resource."),
+	    @ApiResponse(code = 400, message = "Bad request."),
+		@ApiResponse(code = 404, message = "Tticket does not exist.")
+	})
     public ResponseEntity<MessageResponse> deleteDetailTicket(
     		@PathVariable(name="idTicket", required = true) Long idTicket,
     		@PathVariable(name="idDetail", required = true) Long idDetail){
@@ -109,6 +153,15 @@ public class TicketController {
     }
 
 	@DeleteMapping("/{idTicket}")
+	@ApiOperation(value = "Allows you to delete a ticket which will not only delete the "+
+	                      "ticket but also its associated items (details).")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "Search ends successfully."),
+	    @ApiResponse(code = 204, message = "No content."),
+	    @ApiResponse(code = 401, message = "Access to the unauthorized resource."),
+	    @ApiResponse(code = 400, message = "Bad request."),
+		@ApiResponse(code = 404, message = "Tticket does not exist.")
+	})
     public ResponseEntity<MessageResponse> deleteTicket(@PathVariable("idTicket") Long idTicket){
         MessageResponse msnResponse = ticketService.deleteTicket(idTicket);
         return ResponseEntity.status(msnResponse.generateHttpStatus()).body(msnResponse);

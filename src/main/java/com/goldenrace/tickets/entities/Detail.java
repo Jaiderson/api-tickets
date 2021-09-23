@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +46,7 @@ public class Detail {
     @ApiModelProperty(position=3, dataType="Double", value="Amount detail. <br>", example="350.25", required=true)
     private Double amount;
 
+    @JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ticket_id", nullable = false)
 	@ApiModelProperty(position=4, dataType="Ticket")

@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
 @WithMockUser(username = "admin")
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = TicketController.class)
-public class TicketControllerTest {
+class TicketControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
