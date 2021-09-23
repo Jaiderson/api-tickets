@@ -84,7 +84,7 @@ Compilacion de artefacto, el cual queda ubicado en la carpeta target
 
 ## Funcionamiento de la API
 Para acceder a la documentación del API tickets por favor utilice el siguiente link: 
-<a href="http://localhost:8091//tickets-api/v1/swagger-ui-api-ticket.html">Documentacion API tickets</a>
+<a href="https://api-ticket-golden.herokuapp.com/tickets-api/v1/swagger-ui.html">Documentacion API tickets</a>
 
 Para acceder al repositorio del proyecto se debe solicitar permiso al rpositorio provado en Github link: 
 <a href="https://github.com/Jaiderson/api-tickets">Repositorio Git API tickets</a>
